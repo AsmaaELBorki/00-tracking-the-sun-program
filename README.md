@@ -115,3 +115,18 @@ This program is:
 
 The program is actively under development.  
 Repository structures are stable; analytical content evolves iteratively.
+
+--- 
+
+## Repository Structure 
+
+tracking-the-sun-program/
+├── README.md
+└── docs/
+    ├── program-overview.md
+    ├── data-contract.md
+    ├── repo-dependencies.md
+    ├── dataset-overview.md
+    └── conventions.md
+
+
