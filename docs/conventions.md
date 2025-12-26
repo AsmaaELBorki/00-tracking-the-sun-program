@@ -1,35 +1,70 @@
-# Program Conventions
+# Analytical Conventions
 
-## Repository Structure
+This document defines shared conventions across the program.
 
-Each analytical repository follows the same internal structure:
+---
 
-- `data/`
-  - `processed/` (inputs and outputs only)
-- `notebooks/`
-- `docs/`
-- `README.md`
-
-Raw data is never committed to analytical repositories.
-
-## Notebook Design
+## Notebook Philosophy
 
 Notebooks are:
-- readable
-- ordered
+- readable analytical artifacts
+- ordered narratives, not scripts
 - explicit about inputs and outputs
-- limited in scope
 
-Each notebook:
-- prints intermediate results
-- documents assumptions in Markdown
-- saves derived artifacts explicitly
+Every notebook begins with a **Notebook Contract**.
 
-## Naming Conventions
+---
 
-- snake_case for files and variables
-- explicit suffixes for derived datasets
-- no ambiguous abbreviations
+## Printing & Visibility
 
-Example:
-`tracking_the_sun_CA_2024_config_features.parquet`
+All validation, filtering, and transformations:
+- print shapes
+- print summary statistics
+- expose intermediate outputs
+
+Silent transformations are avoided.
+
+---
+
+## Feature Engineering
+
+Derived features:
+- are additive, not destructive
+- preserve original fields
+- are saved explicitly for reuse
+
+---
+
+## Statistical Discipline
+
+- Distributions before models
+- Baselines before deviations
+- Descriptive clarity before prediction
+
+No notebook mixes:
+- EDA
+- modeling
+- interpretation
+without explicit separation.
+
+---
+
+## Language
+
+Claims are:
+- observational
+- comparative
+- conditional
+
+Causal language is avoided unless explicitly justified.
+
+---
+
+## Audience
+
+This program is written for:
+- senior data analysts
+- data scientists
+- technically literate reviewers
+
+Not for tutorials.
