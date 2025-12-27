@@ -1,0 +1,6 @@
+{
+  "installation_date": {
+    "unparseable": "Installation date could not be parsed into a year",
+    "outside_reporting_window": "Installation year falls outside the dataset reporting window"
+  }
+}
