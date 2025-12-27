@@ -1,132 +1,118 @@
-# Tracking the Sun — Analytical Program
+# Tracking the Sun — Analytical Architecture
 
-This repository serves as the **program-level overview and governance layer** for a modular analytical program built on the NREL *Tracking the Sun* dataset.
+This repository does not contain analysis.  
+It defines the conditions under which analysis is allowed to happen.
 
-The program is structured as a sequence of independent but related repositories, each answering a specific class of analytical questions about solar system design, scaling behavior, temporal evolution, and risk patterns.
+Tracking the Sun is treated here as a long-lived analytical object rather than a one-off dataset. The intent is to establish stable structure before questions are asked, so that downstream work does not diverge in assumptions, semantics, or validation logic.
 
-This repository contains **no analysis code**.  
-Its purpose is to explain structure, dependencies, and analytical contracts
-across the program.
-
----
-
-## Program Motivation
-
-The *Tracking the Sun* dataset captures detailed information about distributed solar installations across the United States over multiple decades.
-
-Rather than treating the dataset as a single exploratory exercise, this program approaches it as a **systems-level analytical object**, decomposed into focused, traceable analytical modules.
-
-Each module:
-- answers a specific question class
-- produces explicit outputs
-- feeds downstream reasoning without duplication
+This repository defines a **single trusted analytical substrate** that downstream repositories depend on. Schema decisions, column semantics, scope boundaries, and analytical constraints are declared here and inherited elsewhere.
 
 ---
 
-## Repository Map
+## Architectural Framing
 
-The program is organized into the following repositories:
+The NREL *Tracking the Sun* dataset spans more than two decades of distributed solar installations across the United States, beginning in the late 1990s and extending into the present.
 
-### Repo 1 — System Size Determinants  
-**Purpose:**  
-Understand what contextual, technical, and temporal factors contribute to observed system size.
+Across that time horizon, installation practices, reporting standards, technologies, incentive structures, and market conditions change. Those changes are embedded in the data. If they are not explicitly accounted for, analytical results can conflate structurally different systems into patterns that appear coherent but are not analytically stable.
 
-**Outputs:**  
-System-size features and contextual baselines used downstream.
+This architecture exists to control for that.
 
----
+Rather than approaching the dataset as a single analytical surface, the work is decomposed into multiple repositories. Each repository is scoped around a specific class of questions, produces defined outputs, and passes those outputs forward without redefining assumptions.
 
-### Repo 2 — System Configuration & Inverter Architecture  
-**Purpose:**  
-Analyze how systems of a given size are configured, with emphasis on inverter count, capacity per inverter, and installer behavior.
-
-**Outputs:**  
-Configuration-level features describing inverter architecture and scaling.
+Each repository must be internally coherent while remaining legible as part of the larger system.
 
 ---
 
-### Repo 3 — Scaling, Regimes, and Deviation  
-**Purpose:**  
-Examine expected scaling behavior, regime formation, and deviations across time and geography.
+## Repository Roles and Relationships
 
-**Outputs:**  
-Baseline scaling models and deviation surfaces.
+The architecture is organized as a sequence of repositories operating at distinct analytical layers. Repositories are related through dependency, not containment.
 
----
+### Repo 1 — System Size Determinants
 
-### Repo 4 — Predictive Signals, Risk, and Oversizing  
-**Purpose:**  
-Use features derived from earlier repositories to estimate the likelihood and direction of configuration deviation and potential oversizing.
+Establishes descriptive grounding.
 
-**Outputs:**  
-Predictive features and baseline models.
+This repository focuses on contextual, technical, and temporal factors associated with observed system size. Its outputs define baseline features and reference frames that are consumed by later repositories.
+
+No predictive claims are made here.
 
 ---
 
-## Role of Time Across the Program
+### Repo 2 — System Configuration & Inverter Architecture
 
-Time is treated differently across repositories:
+Builds on size-conditioned baselines defined in Repo 1.
 
-- **Repo 1 & Repo 2:**  
-  Time is a conditioning context (e.g., cohorting, comparison across periods).
+This repository examines how systems of comparable size are configured in practice, with emphasis on inverter count, capacity allocation, and installer behavior as structural signals.
 
-- **Repo 3:**  
-  Time is an evolutionary signal used to identify regime shifts and structural change.
-
-- **Repo 4:**  
-  Time is a predictive feature used in risk and deviation modeling.
-
-This separation prevents conflating descriptive, evolutionary, and predictive claims.
+Outputs describe configuration patterns conditional on size and context and are passed forward unchanged.
 
 ---
 
-## Analytical Substrate
+### Repo 3 — Scaling, Regimes, and Deviation
 
-All downstream repositories assume a **single trusted analytical substrate**:
-- validated schema
-- consistent column semantics
-- documented assumptions
+Consumes baselines and configuration features defined in Repos 1 and 2.
 
-These contracts are defined in the `docs/` directory of this repository.
+This repository formalizes expected scaling behavior, identifies regime formation, and characterizes deviation across time and geography. The focus is on pattern structure rather than explanation.
 
-Downstream repositories do not re-validate raw data unless explicitly stated.
+Outputs define deviation surfaces and regime boundaries used downstream.
 
 ---
 
-## How to Navigate This Program
+### Repo 4 — Predictive Signals, Risk, and Oversizing
 
-1. Start with this repository to understand scope and structure.
-2. Review `docs/data-contract.md` to understand shared assumptions.
-3. Explore individual repositories based on analytical interest.
-4. Follow outputs forward; repositories are not nested or duplicated.
+Operates strictly within constraints established upstream.
+
+This repository uses features defined earlier to explore deviation likelihood, directionality, and potential risk. Predictive work is bounded by prior definitions rather than introducing new interpretations of the data.
+
+---
+
+## Treatment of Time
+
+Time is explicitly scoped per repository.
+
+- In **Repo 1** and **Repo 2**, time functions as conditioning context. It is used for cohorting, comparison across periods, and framing descriptive baselines.
+- In **Repo 3**, time is treated as an evolutionary signal, enabling identification of regime formation, persistence, and structural change.
+- In **Repo 4**, time is introduced as a predictive feature, constrained by upstream definitions rather than reinterpreted.
+
+This separation prevents descriptive patterns from being overstated as evolutionary claims or predictive signals without justification.
+
+---
+
+## The Analytical Substrate
+
+The analytical substrate defined by this repository is conceptual rather than executable.
+
+It consists of:
+- validated schema decisions  
+- consistent column semantics  
+- documented assumptions and exclusions  
+
+These are treated as contracts. Downstream repositories inherit them rather than re-validating raw data, unless explicitly stated otherwise. This keeps analytical effort focused on reasoning rather than repeated preprocessing.
+
+Supporting material lives in the `docs/` directory and includes:
+- data contracts  
+- conventions  
+- dataset overview  
+- repository dependency definitions  
+
+These documents define rules and constraints, not analysis.
 
 ---
 
 ## Scope Boundaries
 
-This program is:
-- observational, not causal
-- focused on analytical reasoning, not policy prescription
-- modular by design to support extension and reuse
+This architecture is observational rather than causal.  
+It prioritizes analytical reasoning over prescription.  
+It is modular by design to support extension without structural breakage.
 
 ---
 
 ## Status
 
-The program is actively under development.  
-Repository structures are stable; analytical content evolves iteratively.
+The architecture is under active development.
 
---- 
+Structural decisions are stabilizing.  
+Analytical content evolves within those constraints.
 
-## Repository Structure 
 
-tracking-the-sun-program/
-├── README.md
-└── docs/
-    ├── program-overview.md
-    ├── data-contract.md
-    ├── repo-dependencies.md
-    ├── dataset-overview.md
-    └── conventions.md
 
 
