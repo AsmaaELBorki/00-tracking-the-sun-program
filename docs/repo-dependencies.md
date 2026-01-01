@@ -1,12 +1,15 @@
 # Repository Dependencies
 
-This document defines how repositories within the Tracking the Sun analytical architecture relate to one another.
+This document defines the **dependency structure** of the *Tracking the Sun* analytical program.
 
-Dependencies are explicit.  
-They are directional.  
-They are not inferred.
+Dependencies are:
+- explicit
+- directional
+- inferential (not merely data flow)
 
-Repositories do not duplicate logic, re-derive shared concepts, or silently reinterpret upstream decisions.
+Repositories do not duplicate logic, re-derive shared concepts, or reinterpret upstream decisions.
+
+This document exists to make **analytical ordering enforceable**, not negotiable.
 
 ---
 
@@ -14,142 +17,180 @@ Repositories do not duplicate logic, re-derive shared concepts, or silently rein
 
 Each repository operates at a distinct analytical layer.
 
-Dependencies describe:
+Dependencies define:
 - what a repository is allowed to assume
-- what it is required to inherit
+- what it must inherit unchanged
 - what it is not permitted to redefine
 
-A repository may depend on outputs from an upstream repository, but it does not depend on its internal implementation.
+A repository may depend on **declared outputs** from an upstream repository, but never on its internal implementation or intermediate reasoning.
 
 Only declared outputs are trusted.
 
 ---
 
-## Repo 0 — Analytical Architecture
+## Repo 0 — Program Canon & Analytical Contracts
 
-**Role:** governance and constraint definition
+**Applied question:**  
+What rules must hold so that conclusions about residential solar system sizing are interpretable and internally consistent?
 
-Repo 0 defines:
-- column roles
-- schema boundaries
-- canonical representations
-- violation classifications
-- allowed assumptions
+**Analytical question:**  
+What analytical structure, scope, and invariants govern all downstream work?
+
+**Depends on:**  
+None.
+
+**Defines:**
+- program scope (California, residential only)
+- analytical posture and non-goals
+- repository ordering and invariants
+- governance documents and authority boundaries
 
 Repo 0 produces no analytical outputs.  
-It establishes the conditions under which analysis elsewhere is valid.
-
 All downstream repositories depend on Repo 0.
 
 ---
 
-## Repo 1 — System Size Determinants
+## Repo 1 — Data Generation & Measurement Process
+
+**Applied question:**  
+What do the Tracking the Sun data actually represent, and what limits do reporting processes impose on interpretation?
+
+**Analytical question:**  
+Which comparisons, aggregations, and inferences are admissible given the declared data-generation process?
 
 **Depends on:**
-- Repo 0 schemas
-- Repo 0 data contracts
-- Repo 0 violation definitions
+- Repo 0 program constraints
 
-Repo 1 is the first execution layer.
+**Defines:**
+- declared data provenance and reporting context
+- unit of observation
+- structural absences and known limitations
+- binding analytical constraints derived from dataset-owner documentation
 
-It:
-- loads raw data
-- applies validation rules
-- derives canonically approved fields
-- establishes descriptive baselines related to system size
+Repo 1 does not transform or model data.  
+It defines what downstream analysis is **allowed** to do.
 
-Repo 1 does not:
-- make predictive claims
-- reinterpret schema semantics
-- introduce new canonical fields without updating Repo 0
-
-Outputs from Repo 1 are consumed downstream.
+All downstream repositories inherit Repo 1 constraints unchanged.
 
 ---
 
-## Repo 2 — System Configuration & Inverter Architecture
+## Repo 2 — Canonical System Size Baselines
+
+**Applied question:**  
+What residential solar system size is typical in California, given time and context?
+
+**Analytical question:**  
+How can expected system size be defined descriptively and defensibly, including uncertainty?
 
 **Depends on:**
-- Repo 0 governance
-- Repo 1 outputs
+- Repo 0 analytical contracts
+- Repo 1 measurement constraints
 
-Repo 2 assumes that:
-- system size baselines are stable
-- canonical fields derived in Repo 1 are valid
-
-It examines configuration behavior conditional on those baselines.
+**Defines:**
+- expected system size distributions
+- temporal and contextual baselines
+- uncertainty bounds around size
 
 Repo 2 does not:
-- re-clean raw data
-- redefine size-related assumptions
-- bypass violations identified upstream
+- interpret structure
+- analyze configuration
+- evaluate abnormality
+- make predictive claims
+
+Outputs from Repo 2 establish the size reference frame for all downstream work.
 
 ---
 
-## Repo 3 — Scaling, Regimes, and Deviation
+## Repo 3 — Within-Size Structural Configuration
+
+**Applied question:**  
+When system size is held constant, how do residential solar systems differ in their configuration?
+
+**Analytical question:**  
+What structural degrees of freedom exist at fixed size, and which variations are non-trivial?
 
 **Depends on:**
 - Repo 0 governance
-- Repo 1 baselines
-- Repo 2 configuration features
+- Repo 1 measurement constraints
+- Repo 2 size baselines
 
-Repo 3 formalizes expected structure:
-- scaling behavior
-- regime formation
-- deviation patterns
-
-It treats time and size strictly according to definitions established upstream.
+**Defines:**
+- configuration equivalence classes
+- admissible structural variation at fixed size
 
 Repo 3 does not:
-- introduce new interpretations of time
-- reinterpret configuration semantics
-- bypass cohort constraints
+- redefine size
+- analyze scaling
+- evaluate risk or abnormality
+
+Its outputs describe **structure conditional on size**, not outcomes.
 
 ---
 
-## Repo 4 — Predictive Signals, Risk, and Oversizing
+## Repo 4 — Scaling Behavior, Regimes, and Deviation Structure
+
+**Applied question:**  
+How do residential solar systems scale in practice, and where do stable regimes and deviation patterns emerge?
+
+**Analytical question:**  
+How does size interact with structure across time and geography to produce regime-like behavior?
 
 **Depends on:**
 - Repo 0 governance
-- Repos 1–3 outputs
+- Repo 1 constraints
+- Repo 2 baselines
+- Repo 3 structural definitions
 
-Repo 4 operates within the tightest constraints.
+**Defines:**
+- scaling behavior
+- regime boundaries
+- deviation surfaces and geometry
 
-It uses only:
-- canonically defined fields
-- upstream-approved features
-- declared assumptions
-
-Repo 4 does not:
-- redefine violations
-- reinterpret uncertainty
-- expand scope beyond what upstream layers support
+Repo 4 characterizes pattern structure.  
+It does not assign risk, abnormality, or likelihood.
 
 ---
 
-## Dependency Rules
+## Repo 5 — Abnormality, Directionality, and Sizing Risk
+
+**Applied question:**  
+Given established scaling regimes, is a system unusually sized for its context—and in which direction?
+
+**Analytical question:**  
+How likely is observed deviation, and when does it plausibly indicate sizing risk?
+
+**Depends on:**
+- Repo 0 governance
+- Repo 1 measurement constraints
+- Repo 2–4 declared outputs
+
+**Defines:**
+- abnormality measures
+- deviation likelihood
+- over- and under-sizing risk indicators
+
+Repo 5 does not:
+- introduce new structure
+- reinterpret upstream definitions
+- expand scope beyond established constraints
+
+---
+
+## Dependency Rules (Binding)
 
 - Dependencies are **additive**, not circular
 - Outputs flow forward only
-- Assumptions are inherited, not reintroduced
-- Any change to Repo 0 may require downstream review
+- Assumptions are inherited, not recreated
+- If a new shared concept is required, it must be defined upstream first
 
-If a repository requires a new shared concept, it must be defined upstream before use.
-
----
-
-## Versioning Implications
-
-Breaking changes in Repo 0:
-- invalidate downstream assumptions
-- require explicit review
-- may force downstream updates
-
-Downstream repositories do not pin internal implementation details, only declared outputs and contracts.
+Changes to Repo 0 or Repo 1 may invalidate downstream assumptions and require review.
 
 ---
 
-This document defines structure, not sequence.
+## Note on Execution
 
-Execution order may vary.  
-Dependency relationships do not.
+This document defines **inferential dependency**, not execution order.
+
+Repositories may be executed independently for development or testing,  
+but analytical conclusions are valid only when dependency relationships are respected.
+
