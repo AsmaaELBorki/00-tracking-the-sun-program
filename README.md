@@ -98,6 +98,34 @@ All findings, baselines, structures, and evaluations produced by this program ap
 
 ---
 
+## Canonical Entity, Identity, and Analytical Grain
+
+This program operates on a **single canonical analytical entity**.
+
+**Entity:**  
+A *physical residential photovoltaic system*.
+
+**Canonical identifier:**  
+`tts_link_id`.
+
+**Entity definition:**  
+All records sharing the same `tts_link_id` are treated as referring to the same physical system.
+
+**Canonical analytical grain:**  
+One row per `tts_link_id`.
+
+**Identity rules:**
+- `tts_link_id` is the only identifier permitted to represent a system  
+- Provider-specific identifiers (e.g. `system_id_1`, `system_id_2`) are non-canonical and may not be used as system keys  
+- Row-level uniqueness does not imply system-level uniqueness  
+
+**Invariant:**  
+No system-level artifact may be materialized unless `tts_link_id` is unique in the output.
+
+This invariant applies to **all repositories that claim to produce system-keyed outputs**, including baseline artifacts, residuals, regime mappings, and abnormality scores.
+
+---
+
 ## Analytical Posture and Boundaries
 
 - Analyses are **descriptive and structural by design**
@@ -179,7 +207,7 @@ What is the expected residential system size in a given context?
 
 **Produces:**  
 - Expected size distributions  
-- System-keyed baseline artifacts  
+- **System-keyed (one row per `tts_link_id`) baseline artifacts**
 
 **Prohibited:**  
 - Structural interpretation  
@@ -263,7 +291,6 @@ Given regime-aware scaling behavior, how unusual is a system and in which direct
 
 ## Governing Invariant
 
-> **No repository is permitted to answer a question whose analytical preconditions — including required upstream artifacts — have not already been settled upstream.**
+> **No repository is permitted to answer a question whose analytical preconditions — including required upstream artifacts, canonical entity definitions, and analytical grain — have not already been settled upstream.**
 
-This invariant governs all work in the *Tracking the Sun* program.
 
