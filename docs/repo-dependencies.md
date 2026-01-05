@@ -100,9 +100,11 @@ How can expected system size be defined descriptively and defensibly, including 
 - Repo 1 measurement constraints
 
 **Defines:**
+**Defines:**
 - expected system size distributions
 - temporal and contextual baselines
 - uncertainty bounds around size
+- **system-keyed baseline artifacts at one row per `tts_link_id`**
 
 Repo 2 does not:
 - interpret structure
